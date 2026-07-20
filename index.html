@@ -171,9 +171,9 @@ select:focus{outline:0;border-color:var(--accent)}
     <h1>零基礎學3D<span class="sep">｜</span><span>課程資源中心</span></h1>
     <div class="sub">插件相容性 · 問題排查 · 硬體建議</div>
   </div>
-  <a class="brand" href="https://zack3d.art" target="_blank" rel="noopener">
+  <a class="brand" href="https://sat.cool/course/160" target="_blank" rel="noopener">
     <span class="brand-name">Zack<b>3D</b></span>
-    <span class="brand-tag">zack3d.art</span>
+    <span class="brand-tag">前往課程 →</span>
   </a>
 </header>
 
@@ -345,39 +345,51 @@ const PLUGINS = [
       {bl:"3.6", os:["win","mac"], pv:"官方版", home:"https://www.adobe.com/products/substance3d/plugins/mixamo-in-blender.html", url:"https://www.substance3d.com/wp-content/uploads/2022/03/30377-artwork-mixamo_rig.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝", note:"3.6 用 Adobe 官網的官方原版（社群升級版只支援 4.5 以上）"}
     ]},
   { id:"togglelang", name:"Toggle Language", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/toggle-language/",
     search:"偏好設定 > 取得擴充功能 > 搜尋「Toggle Language」安裝",
     tags:["其他"], chapter:"通用", desc:"一鍵切換 Blender 介面語言（中／英）。" },
-  { id:"autosavetex", name:"Autosave Texture", src:"builtin", builtin:true,
-    search:"偏好設定 > 取得擴充功能 > 搜尋「Autosave Texture」安裝",
+  { id:"autosavetex", name:"Autosave Textures", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/textures-autosave/",
+    search:"偏好設定 > 取得擴充功能 > 搜尋「Autosave Textures」安裝",
     tags:["材質","流程優化"], chapter:"通用", desc:"自動儲存繪製中的貼圖，避免當機遺失。" },
   { id:"refoverlays", name:"References Overlays", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/references-overlays/",
     search:"偏好設定 > 取得擴充功能 > 搜尋「References Overlays」安裝",
     tags:["流程優化"], chapter:"通用", desc:"在視窗疊放參考圖，方便對照建模。" },
   { id:"booltool", name:"Bool Tool", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/bool-tool/",
     search:"偏好設定 > 附加元件 > 搜尋「Bool Tool」打勾啟用",
     tags:["建模"], chapter:"通用", desc:"快速布林運算（聯集／差集／交集）。" },
   { id:"looptools", name:"LoopTools", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/looptools/",
     search:"偏好設定 > 附加元件 > 搜尋「LoopTools」打勾啟用",
     tags:["建模"], chapter:"通用", desc:"邊線循環的進階整理工具（圓化、放樣、橋接等）。" },
   { id:"f2", name:"F2", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/f2/",
     search:"偏好設定 > 附加元件 > 搜尋「F2」打勾啟用",
     tags:["建模"], chapter:"通用", desc:"強化 F 鍵補面，加速手動建面流程。" },
   { id:"mio3uv", name:"Mio3 UV", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/mio3-uv/",
     search:"偏好設定 > 取得擴充功能 > 搜尋「Mio3 UV」安裝",
     tags:["其他"], chapter:"通用", desc:"UV 展開與整理的加強工具組。" },
   { id:"modifiertools", name:"Modifier Tools", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/modifier-tools/",
     search:"偏好設定 > 附加元件 > 搜尋「Modifier Tools」打勾啟用",
     tags:["流程優化"], chapter:"通用", desc:"修改器面板的批次套用／整理工具。" },
   { id:"simpledeform", name:"Simple Deform Helpers", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/simple-deform-helper/",
     search:"偏好設定 > 取得擴充功能 > 搜尋「Simple Deform Helper」安裝",
     tags:["建模"], chapter:"章節 3-4", desc:"簡化 Simple Deform 修改器的操作，加上輔助控制。" },
   { id:"rigify", name:"Rigify", src:"builtin", builtin:true,
+    home:"https://docs.blender.org/manual/en/latest/addons/rigify/index.html",
     search:"偏好設定 > 附加元件 > 搜尋「Rigify」打勾啟用",
     tags:["其他"], chapter:"章節 4-4", desc:"Blender 內建的角色骨架綁定系統。" },
   { id:"hotnode", name:"Hot Node", src:"builtin", builtin:true,
+    home:"https://extensions.blender.org/add-ons/hot-node/",
     search:"偏好設定 > 取得擴充功能 > 搜尋「Hot Node」安裝",
     tags:["材質","流程優化"], chapter:"通用", desc:"節點群組的快速存取與套用（像節點的素材庫）。" },
   { id:"nodewrangler", name:"Node Wrangler", src:"builtin", builtin:true,
+    home:"https://docs.blender.org/manual/en/latest/addons/node_wrangler.html",
     search:"偏好設定 > 附加元件 > 搜尋「Node Wrangler」打勾啟用",
     tags:["材質","流程優化"], chapter:"通用", desc:"材質／節點編輯的加速快捷工具，課程全程使用。" }
 ];
@@ -510,7 +522,7 @@ function renderPlugins(){
          && !(p.tags||[]).join("").includes(q)) return;
     // builtin:true 的項目自動產生三版列（用 search 當安裝說明）
     const allV = p.versions || VERS.map(bl =>
-      ({bl, os:["win","mac"], pv:"搜尋啟用", url:null, path:p.search}));
+      ({bl, os:["win","mac"], pv:"搜尋啟用", url:null, home:p.home, path:p.search}));
     const vs = allV.filter(v =>
       (F.ver==="all"||v.bl===F.ver) && (F.os==="all"||v.os.includes(F.os)));
     if(!vs.length) return;
