@@ -3,12 +3,22 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <title>零基礎學3D｜課程資源中心</title>
 <style>
 :root{
   --bg:#15130f; --panel:#201c16; --panel2:#29231a;
   --line:#3f372b; --text:#f2ece0; --dim:#a49a8b;
   --accent:#f4902e; --gold:#f3c552; --ok:#6cba82; --warn:#e6b13f; --no:#e26454;
+}
+/* 淺色模式：改成白底的另一套（深色模式維持上面預設） */
+@media (prefers-color-scheme: light){
+  :root{
+    --bg:#ffffff; --panel:#faf6f0; --panel2:#f1ebe1;
+    --line:#e7dece; --text:#2b251c; --dim:#847a69;
+    --accent:#dd7a17; --gold:#b5840a; --ok:#3d9a58; --warn:#b58420; --no:#cc4335;
+  }
+  .envbar{background:rgba(255,255,255,.9)}
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:var(--bg);color:var(--text);
