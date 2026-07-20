@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Blender 課程資源中心 | zack3d</title>
+<style>
+:root{
+  --bg:#14120f; --panel:#1e1b16; --panel2:#262119;
+  --line:#3a332a; --text:#efe9dd; --dim:#9a9084;
+  --accent:#e8873a; --ok:#5fb87a; --warn:#e0a83c; --no:#d05a4e;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);
+  font-family:"Noto Sans TC",-apple-system,"Segoe UI",sans-serif;
+  line-height:1.65;padding:0 0 90px}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+header{border-bottom:1px solid var(--line);padding:32px 0 24px;margin-bottom:22px}
+h1{font-size:1.6rem;letter-spacing:.02em}
+h1 span{color:var(--accent)}
+.sub{color:var(--dim);font-size:.9rem;margin-top:6px}
+
+/* 全站環境列 */
+.envbar{position:sticky;top:0;z-index:20;background:rgba(20,18,15,.96);
+  backdrop-filter:blur(8px);border:1px solid var(--line);border-radius:10px;
+  padding:12px 16px;margin-bottom:20px;display:flex;gap:18px;
+  flex-wrap:wrap;align-items:center}
+.envbar .flabel{font-size:.8rem;color:var(--dim)}
+.envgrp{display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.envnote{color:var(--dim);font-size:.78rem;margin-left:auto}
+
+nav.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid var(--line);
+  overflow-x:auto}
+nav.tabs button{background:none;border:0;color:var(--dim);padding:10px 15px;
+  font-size:.92rem;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
+nav.tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+
+.filters{background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:16px 18px;margin-bottom:22px}
+.frow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.frow:last-child{margin-bottom:0}
+.flabel{font-size:.82rem;color:var(--dim);width:70px;flex-shrink:0}
+.chip{background:var(--panel2);border:1px solid var(--line);color:var(--dim);
+  padding:5px 13px;border-radius:20px;font-size:.84rem;cursor:pointer;transition:.15s}
+.chip:hover{border-color:var(--accent)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#14120f;font-weight:600}
+input[type=text]{flex:1;min-width:180px;background:var(--panel2);border:1px solid var(--line);
+  color:var(--text);padding:8px 13px;border-radius:6px;font-size:.9rem;font-family:inherit}
+input[type=text]:focus{outline:0;border-color:var(--accent)}
+
+.count{color:var(--dim);font-size:.85rem;margin-bottom:13px}
+.count b{color:var(--accent)}
+h2.sec{font-size:1.05rem;margin:26px 0 12px;padding-bottom:7px;border-bottom:1px solid var(--line)}
+h2.sec:first-child{margin-top:0}
+
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:17px 19px;margin-bottom:13px}
+.chead{display:flex;justify-content:space-between;align-items:flex-start;gap:14px}
+.cname{font-size:1.06rem;font-weight:600}
+.ccat{display:inline-block;font-size:.72rem;color:var(--dim);
+  border:1px solid var(--line);padding:1px 8px;border-radius:4px;margin-left:8px;vertical-align:2px}
+.cdesc{color:var(--dim);font-size:.87rem;margin-top:5px}
+.status{font-size:.79rem;padding:4px 11px;border-radius:5px;white-space:nowrap;font-weight:600}
+.s-ok{background:rgba(95,184,122,.15);color:var(--ok)}
+.s-warn{background:rgba(224,168,60,.15);color:var(--warn)}
+.s-no{background:rgba(208,90,78,.15);color:var(--no)}
+
+.vbox{margin-top:13px;border-top:1px solid var(--line);padding-top:13px}
+.vrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:9px 0;font-size:.87rem}
+.vrow+.vrow{border-top:1px dashed var(--line)}
+.vtag{background:var(--panel2);padding:3px 10px;border-radius:5px;
+  font-family:ui-monospace,monospace;font-size:.81rem}
+.os{color:var(--dim);font-size:.84rem}
+.acts{margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dl{color:var(--accent);text-decoration:none;font-size:.84rem;
+  border:1px solid var(--accent);padding:4px 13px;border-radius:5px}
+.dl:hover{background:var(--accent);color:#14120f}
+.home{color:var(--dim);text-decoration:none;font-size:.84rem;
+  border:1px solid var(--line);padding:4px 12px;border-radius:5px}
+.home:hover{border-color:var(--accent);color:var(--accent)}
+.path{width:100%;color:var(--dim);font-size:.78rem;font-family:ui-monospace,monospace;margin-top:2px}
+.note{width:100%;color:var(--warn);font-size:.79rem;margin-top:2px}
+.checked{width:100%;color:var(--dim);font-size:.74rem;margin-top:3px;opacity:.7}
+
+/* 插件卡：來源徽章 / 功能標籤 / 章節 */
+.srcb{display:inline-block;font-size:.72rem;padding:1px 9px;border-radius:4px;
+  margin-left:8px;vertical-align:2px;font-weight:600}
+.srcb-mine{background:rgba(232,135,58,.16);color:var(--accent);border:1px solid rgba(232,135,58,.45)}
+.srcb-builtin{background:rgba(95,184,122,.14);color:var(--ok);border:1px solid rgba(95,184,122,.4)}
+.srcb-external{background:rgba(224,168,60,.14);color:var(--warn);border:1px solid rgba(224,168,60,.4)}
+.ctags{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap;align-items:center}
+.chip-chapter{font-size:.73rem;color:var(--accent);border:1px solid rgba(232,135,58,.45);
+  padding:1px 10px;border-radius:20px;font-weight:600}
+.ftag2{font-size:.73rem;color:var(--dim);background:var(--panel2);border:1px solid var(--line);
+  padding:1px 10px;border-radius:20px}
+.vrow-no{opacity:.5}
+
+/* FAQ */
+.faq{background:var(--panel);border:1px solid var(--line);border-radius:9px;margin-bottom:10px}
+.fq{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;
+  align-items:center;gap:12px;font-weight:600;font-size:.95rem}
+.fq .arrow{color:var(--dim);transition:.2s;flex-shrink:0}
+.faq.open .arrow{transform:rotate(90deg);color:var(--accent)}
+.fa{max-height:0;overflow:hidden;transition:max-height .25s;padding:0 18px}
+.faq.open .fa{max-height:900px;padding:0 18px 16px}
+.fa .lbl{color:var(--accent);font-size:.79rem;margin-top:10px;font-weight:600}
+.fa p{color:var(--dim);font-size:.87rem;margin-top:3px}
+.ftags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.ftag{font-size:.72rem;color:var(--dim);border:1px solid var(--line);
+  padding:1px 8px;border-radius:4px}
+
+.mailbox{background:var(--panel);border:1px dashed var(--accent);border-radius:10px;
+  padding:20px;margin-top:24px;text-align:center}
+.mailbox h3{font-size:1rem;margin-bottom:6px}
+.mailbox p{color:var(--dim);font-size:.87rem;margin-bottom:14px}
+.btn{display:inline-block;background:var(--accent);color:#14120f;text-decoration:none;
+  padding:9px 22px;border-radius:6px;font-weight:600;font-size:.9rem;border:0;
+  cursor:pointer;font-family:inherit}
+
+/* 硬體 */
+.gpusel{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:16px 18px;margin-bottom:18px}
+select{background:var(--panel2);border:1px solid var(--line);color:var(--text);
+  padding:8px 12px;border-radius:6px;font-family:inherit;font-size:.9rem;min-width:200px}
+select:focus{outline:0;border-color:var(--accent)}
+.rec{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:9px;padding:16px 19px;margin-bottom:11px}
+.rec h4{font-size:.95rem;margin-bottom:8px}
+.kv{display:flex;gap:10px;padding:5px 0;font-size:.87rem;border-bottom:1px dashed var(--line)}
+.kv:last-child{border:0}
+.kv .k{color:var(--dim);width:130px;flex-shrink:0}
+.kv .v{font-family:ui-monospace,monospace;color:var(--accent)}
+
+/* 更新日誌 */
+.log{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:8px;padding:15px 18px;margin-bottom:11px}
+.ldate{font-family:ui-monospace,monospace;font-size:.8rem;color:var(--dim)}
+.ltype{font-size:.72rem;padding:2px 8px;border-radius:4px;margin-left:10px}
+.t-plugin{background:rgba(232,135,58,.15);color:var(--accent)}
+.t-blender{background:rgba(95,184,122,.15);color:var(--ok)}
+.t-alert{background:rgba(208,90,78,.15);color:var(--no)}
+.t-course{background:rgba(154,144,132,.18);color:var(--dim)}
+.ltitle{font-weight:600;margin:6px 0 3px}
+.lbody{color:var(--dim);font-size:.87rem}
+
+.hide{display:none}
+.empty{text-align:center;color:var(--dim);padding:46px 0}
+@media(max-width:640px){
+  .flabel{width:auto}
+  .envbar{gap:10px}
+  .envnote{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>Blender 課程<span>資源中心</span></h1>
+  <div class="sub">插件相容性 · 問題排查 · 硬體建議</div>
+</header>
+
+<!-- 全站環境列 -->
+<div class="envbar">
+  <div class="envgrp">
+    <span class="flabel">我的 Blender</span>
+    <button class="chip" data-f="ver" data-v="all">全部</button>
+    <button class="chip" data-f="ver" data-v="3.6">3.6</button>
+    <button class="chip on" data-f="ver" data-v="4.5">4.5</button>
+    <button class="chip" data-f="ver" data-v="5.2">5.2</button>
+  </div>
+  <div class="envgrp">
+    <span class="flabel">系統</span>
+    <button class="chip on" data-f="os" data-v="all">全部</button>
+    <button class="chip" data-f="os" data-v="win">Windows</button>
+    <button class="chip" data-f="os" data-v="mac">macOS</button>
+  </div>
+  <span class="envnote">選好之後全站內容都會跟著切換</span>
+</div>
+
+<nav class="tabs">
+  <button class="on" data-tab="plugins">插件查詢</button>
+  <button data-tab="faq">問題排查</button>
+  <button data-tab="hw">硬體建議</button>
+  <button data-tab="changelog">更新日誌</button>
+</nav>
+
+<section id="plugins">
+  <div class="filters">
+    <div class="frow">
+      <span class="flabel">來源</span>
+      <button class="chip on" data-f="src" data-v="all">全部</button>
+      <button class="chip" data-f="src" data-v="external">外部下載</button>
+      <button class="chip" data-f="src" data-v="builtin">內建／搜尋</button>
+    </div>
+    <div class="frow">
+      <span class="flabel">搜尋</span>
+      <input type="text" id="psearch" placeholder="輸入插件名稱關鍵字…">
+    </div>
+  </div>
+  <div class="count">符合條件：<b id="pn">0</b> 個插件</div>
+  <div id="plist"></div>
+</section>
+<section id="faq" class="hide">
+  <div class="filters">
+    <div class="frow">
+      <span class="flabel">分類</span>
+      <button class="chip on" data-f="fcat" data-v="all">全部</button>
+      <button class="chip" data-f="fcat" data-v="安裝">安裝與啟動</button>
+      <button class="chip" data-f="fcat" data-v="操作">操作與介面</button>
+      <button class="chip" data-f="fcat" data-v="外掛">插件問題</button>
+      <button class="chip" data-f="fcat" data-v="渲染">渲染與輸出</button>
+      <button class="chip" data-f="fcat" data-v="檔案">檔案與相容</button>
+    </div>
+    <div class="frow">
+      <span class="flabel">搜尋</span>
+      <input type="text" id="fsearch" placeholder="描述你遇到的狀況…例如「中文變方框」">
+    </div>
+  </div>
+  <div class="count">找到 <b id="fn">0</b> 筆</div>
+  <div id="flist"></div>
+  <div class="mailbox">
+    <h3>還是沒解決嗎？</h3>
+    <p>直接寄信給我，我會親自回覆。下面的按鈕會自動幫你帶入目前的環境資訊。</p>
+    <a class="btn" id="mailbtn" href="#">寄信給查克</a>
+  </div>
+</section>
+<section id="hw" class="hide"></section>
+<section id="changelog" class="hide">
+  <div class="filters">
+    <div class="frow">
+      <span class="flabel">類型</span>
+      <button class="chip on" data-f="log" data-v="all">全部</button>
+      <button class="chip" data-f="log" data-v="plugin">插件更新</button>
+      <button class="chip" data-f="log" data-v="blender">Blender 更新</button>
+      <button class="chip" data-f="log" data-v="alert">相容性警示</button>
+      <button class="chip" data-f="log" data-v="course">課程內容</button>
+    </div>
+  </div>
+  <div id="logs"></div>
+</section>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════
+   資料區　Claude Code 開發時只需要改這一大段
+   ══════════════════════════════════════════════════════ */
+
+/* ── 1. 插件列表 ──
+   src: builtin=內建或擴充搜尋 / external=外部下載（含查克自製與第三方）
+   builtin:true 的項目 render 會自動產生 3.6/4.5/5.2 三列，用 search 當安裝說明
+   每版可有 home（官方頁面）與 url（直接下載 zip）；status 省略＝ok            */
+const PLUGINS = [
+  /* ===== 外部下載（含查克自製與第三方） ===== */
+  { id:"quickshortcutmap", name:"快捷鍵地圖 2.0（QuickShortcutmap）", src:"external",
+    tags:["流程優化"], chapter:"全部章節",
+    desc:"按 F6 全螢幕叫出快捷鍵地圖，自動依作業系統顯示對應版本，附操作提示。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"2.1.1", home:"https://github.com/zack3ddd/quickshortcutmap/", url:"https://github.com/zack3ddd/quickshortcutmap/releases/download/v2.1.1/QuickShortcutmap.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"2.1.1", home:"https://github.com/zack3ddd/quickshortcutmap/", url:"https://github.com/zack3ddd/quickshortcutmap/releases/download/v2.1.1/QuickShortcutmap.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"3.6", os:["win","mac"], pv:"—", url:null, path:"—", status:"no", note:"3.6 有已知 bug，暫不支援，請改用 4.5 以上"}
+    ]},
+  { id:"curvearray", name:"Curve Array Objects", src:"external",
+    tags:["建模","流程優化"], chapter:"章節 3-4",
+    desc:"把物件或整個集合沿曲線各自獨立排列，即時跟隨曲線，支援隨機散佈與沿曲線變形。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"3.3.1", home:"https://github.com/zack3ddd/curve-array-objects/", url:"https://github.com/zack3ddd/curve-array-objects/releases/download/v3.3.1/CurveArrayObjects.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"3.3.1", home:"https://github.com/zack3ddd/curve-array-objects/", url:"https://github.com/zack3ddd/curve-array-objects/releases/download/v3.3.1/CurveArrayObjects.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"3.6", os:["win","mac"], pv:"3.3.1", home:"https://github.com/zack3ddd/curve-array-objects/", url:"https://github.com/zack3ddd/curve-array-objects/releases/download/v3.3.1/CurveArrayObjects.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝", note:"查克已實測 3.6 可用（低於官方標示的最低版本 4.3，屬非官方相容）"}
+    ]},
+  { id:"modeswitcher", name:"Mode Switcher", src:"external",
+    tags:["流程優化"], chapter:"全部章節",
+    desc:"用餅狀選單快速切換編輯模式，物體模式可直接跳到頂點／邊／面編輯。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"1.1.0", home:"https://github.com/zack3ddd/mode-switcher/", url:"https://github.com/zack3ddd/mode-switcher/releases/download/v1.1.0/ModeSwitcher.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"1.1.0", home:"https://github.com/zack3ddd/mode-switcher/", url:"https://github.com/zack3ddd/mode-switcher/releases/download/v1.1.0/ModeSwitcher.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"3.6", os:["win","mac"], pv:"1.1.0", home:"https://github.com/zack3ddd/mode-switcher/", url:"https://github.com/zack3ddd/mode-switcher/releases/download/v1.1.0/ModeSwitcher.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝", status:"warn", note:"未逐一實測 3.6（bl_info 標最低 4.3），理論可安裝使用"}
+    ]},
+  { id:"favmodifiers", name:"Favorite Modifiers", src:"external",
+    tags:["流程優化","建模"], chapter:"全部章節",
+    desc:"讓修改器面板可快速加入／管理常用修改器，依物件類型分組。原作者 Oleg Stepanov，查克繁中化延伸。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"1.2.0", home:"https://github.com/zack3ddd/favorite-modifiers-tw/", url:"https://github.com/zack3ddd/favorite-modifiers-tw/releases/download/v1.2.0/favorite_modifiers_v1.2.0.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"1.2.0", home:"https://github.com/zack3ddd/favorite-modifiers-tw/", url:"https://github.com/zack3ddd/favorite-modifiers-tw/releases/download/v1.2.0/favorite_modifiers_v1.2.0.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"3.6", os:["win","mac"], pv:"1.2.0", home:"https://github.com/zack3ddd/favorite-modifiers-tw/", url:"https://github.com/zack3ddd/favorite-modifiers-tw/releases/download/v1.2.0/favorite_modifiers_v1.2.0.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝", note:"查克已實測 3.6 可用（低於官方標示的最低版本 4.4）"}
+    ]},
+  { id:"realsnow", name:"Real Snow", src:"external",
+    tags:["材質","渲染"], chapter:"章節 6-4",
+    desc:"在物件上快速生成擬真積雪材質與外形。原作者為官方，官方庫移除後由查克用 AI 更新維護以繼續使用。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"1.3.2", home:"https://github.com/zack3ddd/real-snow/", url:"https://github.com/zack3ddd/real-snow/releases/download/v1.3.2/real_snow.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"1.3.2", home:"https://github.com/zack3ddd/real-snow/", url:"https://github.com/zack3ddd/real-snow/releases/download/v1.3.2/real_snow.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝", status:"warn", note:"程式碼檢查未發現阻擋 4.5 的寫法，但尚未在 4.5 實機測試"},
+      {bl:"3.6", os:["win","mac"], pv:"內建", url:null, path:"偏好設定 > 附加元件 > 搜尋「Real Snow」打勾（3.6 官方自帶）", note:"3.6 直接用 Blender 官方內建版即可，不需這份"}
+    ]},
+  { id:"wireext", name:"wire_ext（輸入法助手）", src:"external",
+    tags:["流程優化"], chapter:"全部章節",
+    desc:"修正 Windows 中文輸入法在 Blender 文字欄位的輸入問題。第三方插件，作者 Arius。",
+    versions:[
+      {bl:"5.2", os:["win"], pv:"3.0.25", home:"https://github.com/Arius-Cr/wire_ext_blender_fix_ime/", url:"https://github.com/Arius-Cr/wire_ext_blender_fix_ime/releases/download/v3.0.25/wire_ext_blender_fix_ime_v3.0.25.zip", path:"偏好設定 > 取得擴充功能 > 齒輪 > 從磁碟安裝（或把 zip 拖進 Blender 視窗）", note:"僅 Windows 可用；第三方插件，作者 Arius"},
+      {bl:"4.5", os:["win"], pv:"3.0.25", home:"https://github.com/Arius-Cr/wire_ext_blender_fix_ime/", url:"https://github.com/Arius-Cr/wire_ext_blender_fix_ime/releases/download/v3.0.25/wire_ext_blender_fix_ime_v3.0.25.zip", path:"偏好設定 > 取得擴充功能 > 齒輪 > 從磁碟安裝（或把 zip 拖進 Blender 視窗）", note:"僅 Windows 可用；第三方插件，作者 Arius"},
+      {bl:"3.6", os:["win"], pv:"—", url:null, path:"—", status:"no", note:"此插件為擴充功能格式、需 Blender 4.2 以上，3.6 不支援"}
+    ]},
+  { id:"polyheaven", name:"Poly Haven Assets", src:"external",
+    tags:["材質"], chapter:"通用",
+    desc:"把 Poly Haven 的 HDRI／材質／模型資產直接匯入 Blender。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"1.2.2", home:"https://polyhaven.com/", url:"https://drive.google.com/uc?export=download&id=1eooPcOV2kFdkUgwxSFvBWJTrne9DO5d_", path:"偏好設定 > 附加元件 > 從磁碟安裝", note:"Poly Haven 官方大方提供原始碼，但建議付費支持（$69 買斷或 $5/月）"},
+      {bl:"4.5", os:["win","mac"], pv:"1.2.2", home:"https://polyhaven.com/", url:"https://drive.google.com/uc?export=download&id=1eooPcOV2kFdkUgwxSFvBWJTrne9DO5d_", path:"偏好設定 > 附加元件 > 從磁碟安裝", note:"Poly Haven 官方大方提供原始碼，但建議付費支持（$69 買斷或 $5/月）"},
+      {bl:"3.6", os:["win","mac"], pv:"1.1.11", url:null, path:"—", status:"no", note:"此下載版需 4.5 以上；3.6 需改用官方舊分支 v1.1.11"}
+    ]},
+
+  /* ===== 內建／搜尋（含擴充平台的第三方） ===== */
+  { id:"ucupaint", name:"Ucupaint", src:"builtin",
+    tags:["材質"], chapter:"章節 4-3",
+    desc:"圖層式材質繪製系統，像 Photoshop 圖層那樣疊材質。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"擴充庫", home:"https://extensions.blender.org/add-ons/ucupaint/", url:null, path:"偏好設定 > 取得擴充功能 > 搜尋「Ucupaint」安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"擴充庫", home:"https://extensions.blender.org/add-ons/ucupaint/", url:null, path:"偏好設定 > 取得擴充功能 > 搜尋「Ucupaint」安裝"},
+      {bl:"3.6", os:["win","mac"], pv:"2.4.8", home:"https://github.com/ucupumar/ucupaint/", url:"https://github.com/ucupumar/ucupaint/releases/download/2.4.8/ucupaint-2.4.8.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝", note:"3.6 沒有「取得擴充功能」介面，用這個 zip 手動安裝。下載頁有三個檔案，選主檔（不要 27x-legacy 或 no-auto-update）"}
+    ]},
+  { id:"mixamo", name:"Mixamo Rig（骨骼對應）", src:"builtin",
+    tags:["其他"], chapter:"章節 4-5",
+    desc:"把 Mixamo 自動綁定的角色轉成可控制的 control rig。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"1.2.2", home:"https://extensions.blender.org/add-ons/mixamo-rig/", url:null, path:"偏好設定 > 取得擴充功能 > 搜尋「Mixamo Rig」安裝", note:"4.5／5.2 用社群升級版（tyler.tofu 維護）"},
+      {bl:"4.5", os:["win","mac"], pv:"1.2.2", home:"https://extensions.blender.org/add-ons/mixamo-rig/", url:null, path:"偏好設定 > 取得擴充功能 > 搜尋「Mixamo Rig」安裝", note:"4.5／5.2 用社群升級版（tyler.tofu 維護）"},
+      {bl:"3.6", os:["win","mac"], pv:"官方版", home:"https://www.adobe.com/products/substance3d/plugins/mixamo-in-blender.html", url:"https://www.substance3d.com/wp-content/uploads/2022/03/30377-artwork-mixamo_rig.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝", note:"3.6 用 Adobe 官網的官方原版（社群升級版只支援 4.5 以上）"}
+    ]},
+  { id:"togglelang", name:"Toggle Language", src:"builtin", builtin:true,
+    search:"偏好設定 > 取得擴充功能 > 搜尋「Toggle Language」安裝",
+    tags:["其他"], chapter:"通用", desc:"一鍵切換 Blender 介面語言（中／英）。" },
+  { id:"autosavetex", name:"Autosave Texture", src:"builtin", builtin:true,
+    search:"偏好設定 > 取得擴充功能 > 搜尋「Autosave Texture」安裝",
+    tags:["材質","流程優化"], chapter:"通用", desc:"自動儲存繪製中的貼圖，避免當機遺失。" },
+  { id:"refoverlays", name:"References Overlays", src:"builtin", builtin:true,
+    search:"偏好設定 > 取得擴充功能 > 搜尋「References Overlays」安裝",
+    tags:["流程優化"], chapter:"通用", desc:"在視窗疊放參考圖，方便對照建模。" },
+  { id:"booltool", name:"Bool Tool", src:"builtin", builtin:true,
+    search:"偏好設定 > 附加元件 > 搜尋「Bool Tool」打勾啟用",
+    tags:["建模"], chapter:"通用", desc:"快速布林運算（聯集／差集／交集）。" },
+  { id:"looptools", name:"LoopTools", src:"builtin", builtin:true,
+    search:"偏好設定 > 附加元件 > 搜尋「LoopTools」打勾啟用",
+    tags:["建模"], chapter:"通用", desc:"邊線循環的進階整理工具（圓化、放樣、橋接等）。" },
+  { id:"f2", name:"F2", src:"builtin", builtin:true,
+    search:"偏好設定 > 附加元件 > 搜尋「F2」打勾啟用",
+    tags:["建模"], chapter:"通用", desc:"強化 F 鍵補面，加速手動建面流程。" },
+  { id:"mio3uv", name:"Mio3 UV", src:"builtin", builtin:true,
+    search:"偏好設定 > 取得擴充功能 > 搜尋「Mio3 UV」安裝",
+    tags:["其他"], chapter:"通用", desc:"UV 展開與整理的加強工具組。" },
+  { id:"modifiertools", name:"Modifier Tools", src:"builtin", builtin:true,
+    search:"偏好設定 > 附加元件 > 搜尋「Modifier Tools」打勾啟用",
+    tags:["流程優化"], chapter:"通用", desc:"修改器面板的批次套用／整理工具。" },
+  { id:"simpledeform", name:"Simple Deform Helpers", src:"builtin", builtin:true,
+    search:"偏好設定 > 取得擴充功能 > 搜尋「Simple Deform Helper」安裝",
+    tags:["建模"], chapter:"章節 3-4", desc:"簡化 Simple Deform 修改器的操作，加上輔助控制。" },
+  { id:"rigify", name:"Rigify", src:"builtin", builtin:true,
+    search:"偏好設定 > 附加元件 > 搜尋「Rigify」打勾啟用",
+    tags:["其他"], chapter:"章節 4-4", desc:"Blender 內建的角色骨架綁定系統。" },
+  { id:"hotnode", name:"Hot Node", src:"builtin", builtin:true,
+    search:"偏好設定 > 取得擴充功能 > 搜尋「Hot Node」安裝",
+    tags:["材質","流程優化"], chapter:"通用", desc:"節點群組的快速存取與套用（像節點的素材庫）。" },
+  { id:"nodewrangler", name:"Node Wrangler", src:"builtin", builtin:true,
+    search:"偏好設定 > 附加元件 > 搜尋「Node Wrangler」打勾啟用",
+    tags:["材質","流程優化"], chapter:"通用", desc:"材質／節點編輯的加速快捷工具，課程全程使用。" }
+];
+
+/* ── 2. 常見問題排查 ── */
+const FAQS = [
+  { q:"按快捷鍵完全沒反應", cat:"操作", ver:["3.6","4.5","5.2"], os:["win","mac"],
+    cause:"輸入法停留在中文狀態，按鍵被輸入法攔截。",
+    fix:"切換到英文輸入法（Windows：Win + Space；Mac：Ctrl + Space 或 Caps Lock）。建議操作 Blender 時養成先切輸入法的習慣。",
+    tags:["快捷鍵","輸入法"] },
+  { q:"文字物件打中文變成方框或看不到字", cat:"操作", ver:["3.6","4.5","5.2"], os:["win","mac"],
+    cause:"Blender 預設字型不含中文字集。",
+    fix:"新增文字物件後，到 Object Data Properties > Font > Regular 載入系統中文字型，再進編輯模式貼上文字。",
+    tags:["文字","中文"] },
+  { q:"插件裝好了但清單裡找不到", cat:"外掛", ver:["5.2"], os:["win","mac"],
+    cause:"5.2 改為 Extensions 系統，手動安裝的插件預設會分類到 Add-ons 而非 Extensions 清單。",
+    fix:"到 Preferences > Add-ons，把右上角的來源篩選改成 All 或 User，再搜尋插件名稱。若仍找不到，確認安裝時是否選了 Install from Disk。",
+    tags:["插件","5.2"] },
+  { q:"插件安裝時出現權限錯誤", cat:"外掛", ver:["3.6","4.5","5.2"], os:["win"],
+    cause:"Blender 安裝在 Program Files，寫入插件資料夾需要管理員權限。",
+    fix:"以系統管理員身分執行 Blender 再安裝一次；或把 Blender 改裝到 C:\\ 根目錄下的自訂資料夾。",
+    tags:["插件","權限"] },
+  { q:"插件安裝後 Blender 說檔案已損毀", cat:"外掛", ver:["3.6","4.5","5.2"], os:["mac"],
+    cause:"macOS Gatekeeper 隔離了下載的 zip 檔。",
+    fix:"在 Finder 對 zip 按右鍵選「開啟」解除隔離，或在終端機執行 xattr -d com.apple.quarantine 檔案路徑，之後再安裝。",
+    tags:["插件","macOS"] },
+  { q:"沒有數字鍵盤，切不了視角", cat:"操作", ver:["3.6","4.5","5.2"], os:["win","mac"],
+    cause:"筆電缺少 Numpad，Blender 的視角快捷鍵預設綁在數字鍵盤上。",
+    fix:"Preferences > Input > 勾選 Emulate Numpad，之後用主鍵盤上方的 1/3/7 就能切換前 / 側 / 頂視圖。",
+    tags:["視角","筆電"] },
+  { q:"觸控板無法旋轉視角", cat:"操作", ver:["3.6","4.5","5.2"], os:["mac"],
+    cause:"沒有中鍵可用。",
+    fix:"Preferences > Input > 勾選 Emulate 3 Button Mouse，之後按住 Option + 拖曳即可旋轉視角。",
+    tags:["視角","觸控板"] },
+  { q:"Cycles 渲染時顯示卡沒有被使用", cat:"渲染", ver:["3.6","4.5","5.2"], os:["win","mac"],
+    cause:"渲染裝置未設定，或 Render Properties 裡的 Device 仍設為 CPU。",
+    fix:"兩個地方都要設：Preferences > System > Cycles Render Devices 選對後端並勾選顯卡；接著到 Render Properties > Device 選 GPU Compute。",
+    tags:["渲染","GPU"] },
+  { q:"渲染到一半當掉或畫面全黑", cat:"渲染", ver:["3.6","4.5","5.2"], os:["win","mac"],
+    cause:"顯示記憶體不足，多半是貼圖解析度過高或場景多邊形過多。",
+    fix:"降低貼圖解析度到 2K、開啟 Simplify 限制 Subdivision 層級、或改用 EEVEE 先出預覽。詳細參數請看「硬體建議」分頁。",
+    tags:["渲染","記憶體"] },
+  { q:"開啟課程專案檔跳出版本警告", cat:"檔案", ver:["3.6","4.5"], os:["win","mac"],
+    cause:"專案檔是用較新版本的 Blender 存的，向下相容不完整。",
+    fix:"下載對應你 Blender 版本的專案檔（資源頁面每個檔案都有標示存檔版本）。若必須用舊版開新檔，材質節點與修改器設定可能會遺失，需要手動重建。",
+    tags:["專案檔","相容"] },
+  { q:"材質在 4.5 / 5.2 開起來跟影片不一樣", cat:"檔案", ver:["4.5","5.2"], os:["win","mac"],
+    cause:"Principled BSDF 在 4.x 之後大改版，Subsurface 與 Specular 參數結構不同。",
+    fix:"參考「版本差異」分頁的材質對照表手動調整。課程也有提供 4.5 / 5.2 專用的材質預設檔可直接套用。",
+    tags:["材質","版本"] },
+  { q:"Auto Smooth 找不到了", cat:"操作", ver:["4.5","5.2"], os:["win","mac"],
+    cause:"4.1 之後 Auto Smooth 從 Object Data 面板移除，改為修改器實作。",
+    fix:"對物件按右鍵選 Shade Auto Smooth，Blender 會自動加上 Smooth by Angle 修改器，角度在修改器面板裡調整。",
+    tags:["建模","版本"] },
+  { q:"Blender 開啟後畫面異常或直接閃退", cat:"安裝", ver:["3.6","4.5","5.2"], os:["win"],
+    cause:"顯示卡驅動過舊，或使用了內顯而非獨顯。",
+    fix:"更新到最新版顯示卡驅動；NVIDIA 使用者另外到 NVIDIA 控制面板把 Blender 指定為使用高效能顯示卡。",
+    tags:["安裝","驅動"] },
+  { q:"想同時安裝多個 Blender 版本", cat:"安裝", ver:["3.6","4.5","5.2"], os:["win","mac"],
+    cause:"跟著課程走可能需要在不同版本間切換。",
+    fix:"Blender 支援多版本並存，下載 Portable / zip 版解壓到不同資料夾即可，設定檔互不干擾。Mac 則把不同版本的 app 改名後放在同一個資料夾。",
+    tags:["安裝","多版本"] }
+];
+
+/* ── 3. 硬體與效能建議 ── */
+const GPUS = [
+  { id:"nv-high", label:"NVIDIA RTX 4070 以上 / 3080 以上", os:["win"],
+    engine:"Cycles（OptiX）", backend:"OptiX", samples:"預覽 32 / 正式 256",
+    denoise:"OptiX Denoise，開啟", tile:"2048", extra:"可以直接跟著課程參數走，不需要降規。4K 貼圖與 Subdivision 3 級都吃得下。" },
+  { id:"nv-mid", label:"NVIDIA RTX 3060 / 4060 等級", os:["win"],
+    engine:"Cycles（OptiX）", backend:"OptiX", samples:"預覽 24 / 正式 128",
+    denoise:"OptiX Denoise，開啟", tile:"1024", extra:"貼圖建議控制在 2K。動畫輸出前先用 EEVEE 確認構圖，再切 Cycles 出正式圖。" },
+  { id:"nv-low", label:"NVIDIA GTX 1650 / 1060 等級", os:["win"],
+    engine:"EEVEE 為主，Cycles 出定格圖", backend:"CUDA", samples:"預覽 16 / 正式 64",
+    denoise:"OpenImageDenoise（CPU）", tile:"512", extra:"顯存偏低，記得開啟 Simplify 並把 Viewport Subdivision 限制在 1。課程動畫章節建議全程用 EEVEE。" },
+  { id:"amd", label:"AMD Radeon RX 6000 / 7000 系列", os:["win"],
+    engine:"Cycles（HIP）", backend:"HIP", samples:"預覽 24 / 正式 128",
+    denoise:"OpenImageDenoise", tile:"1024", extra:"HIP 後端速度落後同級 NVIDIA 約三到四成，時間預期要放寬。驅動務必更新到最新版。" },
+  { id:"mac-m3", label:"Apple Silicon M3 / M4 Pro 以上", os:["mac"],
+    engine:"Cycles（Metal）或 EEVEE", backend:"Metal", samples:"預覽 24 / 正式 128",
+    denoise:"OpenImageDenoise", tile:"1024", extra:"統一記憶體是優勢，大場景不容易爆。但 Cycles 在 Metal 上仍慢於同價位 NVIDIA，動畫章節建議用 EEVEE。" },
+  { id:"mac-m1", label:"Apple Silicon M1 / M2 基礎款", os:["mac"],
+    engine:"EEVEE 為主", backend:"Metal", samples:"預覽 16 / 正式 64",
+    denoise:"OpenImageDenoise", tile:"512", extra:"8GB 記憶體機型請把貼圖控制在 2K 以內，並隨手存檔。Cycles 只建議用來出單張定格圖。" },
+  { id:"mac-intel", label:"Intel Mac（含 AMD 顯卡）", os:["mac"],
+    engine:"EEVEE", backend:"CPU", samples:"預覽 16 / 正式 48",
+    denoise:"OpenImageDenoise", tile:"256", extra:"Blender 已停止對 Intel Mac 的 GPU 渲染最佳化，Cycles 只能走 CPU。建議全程 EEVEE，或考慮雲端渲染。" }
+];
+
+/* ── 4. 更新日誌 ── */
+const LOGS = [
+  {date:"2026-07-15", type:"alert", title:"UVPackmaster macOS 版本延後",
+   body:"作者確認 Apple Silicon 版本預計 8 月中才會支援 5.2。Mac 同學建議課程期間先停在 4.5 LTS。"},
+  {date:"2026-07-12", type:"course", title:"5.2 版本差異對照表上線",
+   body:"整理了介面、建模、材質、綁定四大類共 11 項差異，對照到課程章節。跟著 5.2 學的同學請先看過這頁。"},
+  {date:"2026-07-08", type:"plugin", title:"Hard Ops / BoxCutter 更新至 1.0.4",
+   body:"修正 5.2 中 Bevel 修改器堆疊順序錯誤的問題。已購買者可從原下載連結直接取得新版。"},
+  {date:"2026-07-02", type:"blender", title:"Blender 5.2 LTS 正式釋出",
+   body:"課程所有章節已完成 5.2 相容性測試，差異處補充影片同步更新。3.6 與 4.5 內容繼續保留不下架。"},
+  {date:"2026-06-20", type:"alert", title:"Quixel Bridge 停止維護",
+   body:"官方轉向 Fab 平台，5.2 起請改用 Fab 插件。舊專案素材不受影響。"},
+  {date:"2026-06-11", type:"plugin", title:"MACHIN3tools 1.10 發布",
+   body:"新增 5.2 支援，Pie Menu 快捷鍵配置需重新設定一次。"},
+  {date:"2026-06-02", type:"course", title:"CH4-6 腳踏車綁定補充影片",
+   body:"針對 4.5 之後約束器面板的細微差異，補錄一段 8 分鐘的差異說明。"}
+];
+
+/* ══════════════════════════════════════════════════════
+   以下為邏輯，通常不需更動
+   ══════════════════════════════════════════════════════ */
+const F = {ver:"4.5", os:"all", src:"all", fcat:"all", log:"all"};
+const SMAP = {ok:["s-ok","✅ 可用"], warn:["s-warn","⚠️ 注意"], no:["s-no","❌ 尚未支援"]};
+const SRCB = {
+  builtin:'<span class="srcb srcb-builtin">內建／搜尋</span>',
+  external:'<span class="srcb srcb-external">外部下載</span>'
+};
+const OSN = {win:"Windows", mac:"macOS"};
+const VERS = ["3.6","4.5","5.2"];
+
+const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const curOS   = () => F.os  === "all" ? ["win","mac"] : [F.os];
+
+/* ── 插件 ── */
+function renderPlugins(){
+  const q = document.getElementById("psearch").value.trim().toLowerCase();
+  let n = 0, html = "";
+  PLUGINS.forEach(p=>{
+    if(F.src!=="all" && p.src!==F.src) return;
+    if(q && !p.name.toLowerCase().includes(q) && !p.desc.includes(q)
+         && !(p.tags||[]).join("").includes(q)) return;
+    // builtin:true 的項目自動產生三版列（用 search 當安裝說明）
+    const allV = p.versions || VERS.map(bl =>
+      ({bl, os:["win","mac"], pv:"搜尋啟用", url:null, path:p.search}));
+    const vs = allV.filter(v =>
+      (F.ver==="all"||v.bl===F.ver) && (F.os==="all"||v.os.includes(F.os)));
+    if(!vs.length) return;
+    n++;
+    html += `<div class="card">
+      <div class="chead"><div style="flex:1">
+        <span class="cname">${esc(p.name)}</span>${SRCB[p.src]||""}
+        <div class="cdesc">${esc(p.desc)}</div>
+        <div class="ctags"><span class="chip-chapter">📖 ${esc(p.chapter)}</span>${
+          (p.tags||[]).map(t=>`<span class="ftag2">${esc(t)}</span>`).join("")}</div>
+      </div></div>
+      <div class="vbox">${vs.map(v=>{
+        const [scls,slabel] = SMAP[v.status||"ok"];
+        const dl = (v.url && v.status!=="no")
+          ? `<a class="dl" href="${v.url}" target="_blank" rel="noopener">下載 ZIP</a>` : "";
+        const home = v.home
+          ? `<a class="home" href="${v.home}" target="_blank" rel="noopener">官方頁面</a>` : "";
+        const acts = (home||dl) ? `<span class="acts">${home}${dl}</span>` : "";
+        return `<div class="vrow${v.status==="no"?" vrow-no":""}">
+          <span class="vtag">Blender ${v.bl}</span>
+          <span class="status ${scls}">${slabel}</span>
+          <span class="vtag">版本 ${esc(v.pv)}</span>
+          <span class="os">${v.os.map(o=>OSN[o]).join(" / ")}</span>
+          ${acts}
+          <div class="path">安裝：${esc(v.path)}</div>
+          ${v.note?`<div class="note">※ ${esc(v.note)}</div>`:""}
+        </div>`;}).join("")}</div>
+    </div>`;
+  });
+  document.getElementById("pn").textContent = n;
+  document.getElementById("plist").innerHTML = n ? html
+    : `<div class="empty">目前的篩選條件沒有對應的插件<br>試著放寬 Blender 版本或系統條件</div>`;
+}
+
+/* ── FAQ ── */
+function renderFaq(){
+  const q = document.getElementById("fsearch").value.trim().toLowerCase();
+  const rows = FAQS.filter(f=>{
+    if(F.fcat!=="all" && f.cat!==F.fcat) return false;
+    if(F.ver!=="all" && !f.ver.includes(F.ver)) return false;
+    if(F.os!=="all" && !f.os.includes(F.os)) return false;
+    if(q && !(f.q+f.cause+f.fix+f.tags.join("")).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  document.getElementById("fn").textContent = rows.length;
+  document.getElementById("flist").innerHTML = rows.length ? rows.map((f,i)=>`
+    <div class="faq" data-faq="${i}">
+      <div class="fq"><span>${esc(f.q)}</span><span class="arrow">▶</span></div>
+      <div class="fa">
+        <div class="lbl">可能原因</div><p>${esc(f.cause)}</p>
+        <div class="lbl">解決方法</div><p>${esc(f.fix)}</p>
+        <div class="ftags">${f.tags.map(t=>`<span class="ftag">${esc(t)}</span>`).join("")}
+          <span class="ftag">${f.ver.join(" / ")}</span>
+          <span class="ftag">${f.os.map(o=>OSN[o]).join(" / ")}</span></div>
+      </div>
+    </div>`).join("")
+    : `<div class="empty">沒有符合的排查項目<br>試著用不同的關鍵字，或直接寄信給我</div>`;
+
+  document.querySelectorAll(".faq .fq").forEach(el=>{
+    el.onclick = () => el.parentElement.classList.toggle("open");
+  });
+  updateMail();
+}
+
+function updateMail(){
+  const v = F.ver==="all" ? "（未選）" : F.ver;
+  const o = F.os==="all" ? "（未選）" : OSN[F.os];
+  const body =
+`（請描述你遇到的問題，附上截圖會更快）
+
+────────────
+以下為系統自動帶入，請保留
+Blender 版本：${v}
+作業系統：${o}
+瀏覽器回報時間：${new Date().toLocaleString("zh-TW")}
+────────────`;
+  document.getElementById("mailbtn").href =
+    `mailto:hi@zack3d.art?subject=${encodeURIComponent(`[課程問題] Blender ${v} / ${o}`)}&body=${encodeURIComponent(body)}`;
+}
+
+/* ── 硬體 ── */
+function renderHw(){
+  const list = GPUS.filter(g => F.os==="all" || g.os.includes(F.os));
+  document.getElementById("hw").innerHTML = `
+    <div class="gpusel">
+      <div class="frow" style="margin:0">
+        <span class="flabel">我的顯卡</span>
+        <select id="gpu">
+          <option value="">請選擇你的顯示卡等級…</option>
+          ${list.map(g=>`<option value="${g.id}">${esc(g.label)}</option>`).join("")}
+        </select>
+      </div>
+    </div>
+    <div id="hwout"><div class="empty">選擇顯示卡後，會顯示建議的渲染引擎與參數</div></div>`;
+
+  document.getElementById("gpu").onchange = e=>{
+    const g = GPUS.find(x=>x.id===e.target.value);
+    document.getElementById("hwout").innerHTML = g ? `
+      <div class="rec">
+        <h4>${esc(g.label)}</h4>
+        <div class="kv"><span class="k">建議渲染引擎</span><span class="v">${esc(g.engine)}</span></div>
+        <div class="kv"><span class="k">Cycles 後端</span><span class="v">${esc(g.backend)}</span></div>
+        <div class="kv"><span class="k">取樣值 Samples</span><span class="v">${esc(g.samples)}</span></div>
+        <div class="kv"><span class="k">降噪 Denoise</span><span class="v">${esc(g.denoise)}</span></div>
+        <div class="kv"><span class="k">Tile Size</span><span class="v">${esc(g.tile)}</span></div>
+      </div>
+      <div class="rec"><h4>補充說明</h4><p style="color:var(--dim);font-size:.88rem">${esc(g.extra)}</p></div>`
+      : `<div class="empty">選擇顯示卡後，會顯示建議的渲染引擎與參數</div>`;
+  };
+}
+
+/* ── 日誌 ── */
+function renderLogs(){
+  const T = {plugin:["t-plugin","插件更新"], blender:["t-blender","Blender 更新"],
+             alert:["t-alert","相容性警示"], course:["t-course","課程內容"]};
+  const rows = LOGS.filter(l=>F.log==="all"||l.type===F.log);
+  document.getElementById("logs").innerHTML = rows.length ? rows.map(l=>{
+    const [c,t] = T[l.type];
+    return `<div class="log">
+      <span class="ldate">${l.date}</span><span class="ltype ${c}">${t}</span>
+      <div class="ltitle">${esc(l.title)}</div><div class="lbody">${esc(l.body)}</div>
+    </div>`;
+  }).join("") : `<div class="empty">沒有這個類型的紀錄</div>`;
+}
+
+function renderAll(){ renderPlugins(); renderFaq(); renderHw(); }
+
+/* ── 事件綁定 ── */
+document.querySelectorAll(".chip").forEach(b=>{
+  b.onclick = ()=>{
+    const k = b.dataset.f;
+    document.querySelectorAll(`.chip[data-f="${k}"]`).forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    F[k] = b.dataset.v;
+    if(k==="log") renderLogs();
+    else if(k==="src") renderPlugins();
+    else if(k==="fcat") renderFaq();
+    else renderAll();   // ver / os 影響全站
+  };
+});
+document.getElementById("psearch").oninput = renderPlugins;
+document.getElementById("fsearch").oninput = renderFaq;
+document.querySelectorAll("nav.tabs button").forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("on"));
+    b.classList.add("on");
+    ["plugins","faq","hw","changelog"].forEach(id=>
+      document.getElementById(id).classList.toggle("hide", id!==b.dataset.tab));
+  };
+});
+
+renderAll(); renderLogs();
+</script>
+</body>
+</html>
