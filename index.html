@@ -115,6 +115,47 @@ h2.sec:first-child{margin-top:0}
   padding:1px 10px;border-radius:20px}
 .vrow-no{opacity:.5}
 
+/* 頂部導流 CTA */
+.cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;text-decoration:none;
+  background:linear-gradient(135deg,rgba(243,197,82,.14),rgba(244,144,46,.10));
+  border:1px solid rgba(244,144,46,.55);border-radius:10px;
+  padding:13px 18px;margin-bottom:18px}
+.cta .ctitle{font-weight:700;font-size:.95rem;color:var(--text)}
+.cta .csub{color:var(--dim);font-size:.83rem;margin-top:2px}
+.cta .ctxt{flex:1;min-width:220px}
+.cta:hover{border-color:var(--accent)}
+
+/* 新手設置 */
+.setupintro{background:var(--panel);border-left:3px solid var(--gold);border:1px solid var(--line);
+  border-left:3px solid var(--gold);border-radius:9px;padding:13px 17px;margin-bottom:16px;
+  color:var(--dim);font-size:.88rem}
+.sprog{display:flex;align-items:center;gap:14px;background:var(--panel);border:1px solid var(--line);
+  border-radius:10px;padding:12px 16px;margin-bottom:18px}
+.sptxt{font-size:.88rem;white-space:nowrap}
+.sptxt b{color:var(--accent);font-size:1.05rem}
+.spbar{flex:1;height:8px;background:var(--panel2);border-radius:6px;overflow:hidden;min-width:120px}
+#spfill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width .3s}
+#spreset{background:none;border:1px solid var(--line);color:var(--dim);border-radius:6px;
+  padding:4px 12px;cursor:pointer;font-size:.8rem;font-family:inherit}
+#spreset:hover{border-color:var(--no);color:var(--no)}
+.step{background:var(--panel);border:1px solid var(--line);border-radius:9px;
+  padding:13px 16px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start}
+.step input[type=checkbox]{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);
+  cursor:pointer;flex-shrink:0}
+.step.done{opacity:.55}
+.step.done .st{text-decoration:line-through}
+.st{font-weight:600;font-size:.95rem;cursor:pointer}
+.sd{color:var(--dim);font-size:.85rem;margin-top:3px}
+.slinks{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
+.slink{color:var(--accent);text-decoration:none;font-size:.8rem;border:1px solid var(--accent);
+  padding:3px 12px;border-radius:5px;background:none;cursor:pointer;font-family:inherit}
+.slink:hover{background:var(--accent);color:#14120f}
+.ctab{width:100%;border-collapse:collapse;margin-top:9px;font-size:.84rem}
+.ctab td{border:1px solid var(--line);padding:5px 10px}
+.ctab td:first-child{font-family:ui-monospace,monospace;color:var(--accent);white-space:nowrap}
+@keyframes cardflash{0%,55%{box-shadow:0 0 0 2px var(--accent)}100%{box-shadow:none}}
+.flash{animation:cardflash 1.5s}
+
 /* FAQ */
 .faq{background:var(--panel);border:1px solid var(--line);border-radius:9px;margin-bottom:10px}
 .fq{padding:14px 18px;cursor:pointer;display:flex;justify-content:space-between;
@@ -187,6 +228,14 @@ select:focus{outline:0;border-color:var(--accent)}
   </a>
 </header>
 
+<a class="cta" href="https://course.zack3d.art/digital-downloads" target="_blank" rel="noopener">
+  <div class="ctxt">
+    <div class="ctitle">📥 到查克的數位下載區免費註冊</div>
+    <div class="csub">插件、新工具、更新通知都會發布在那裡——有新東西第一時間收到</div>
+  </div>
+  <span class="btn">前往註冊 →</span>
+</a>
+
 <!-- 全站環境列 -->
 <div class="envbar">
   <div class="envgrp">
@@ -206,13 +255,27 @@ select:focus{outline:0;border-color:var(--accent)}
 </div>
 
 <nav class="tabs">
-  <button class="on" data-tab="plugins">插件查詢</button>
+  <button class="on" data-tab="setup">新手設置</button>
+  <button data-tab="plugins">插件查詢</button>
   <button data-tab="faq">問題排查</button>
   <button data-tab="hw">硬體建議</button>
   <button data-tab="changelog">更新日誌</button>
 </nav>
 
-<section id="plugins">
+<section id="setup">
+  <div class="setupintro">
+    這份指引整理自課程 <b>1-1「進入3D世界的基礎準備」</b>，以課程錄製版本 <b>Blender 4.5 LTS</b>（4.5.3）為準。
+    4.5 系列（含最新 4.5.7）與 5.2 LTS 的介面幾乎相同，可以直接照做。做完一項就打勾，進度會自動記住。
+  </div>
+  <div class="sprog">
+    <span class="sptxt">已完成 <b id="spn">0</b> / <span id="spt">0</span></span>
+    <div class="spbar"><div id="spfill"></div></div>
+    <button id="spreset">重設進度</button>
+  </div>
+  <div id="setuplist"></div>
+</section>
+
+<section id="plugins" class="hide">
   <div class="filters">
     <div class="frow">
       <span class="flabel">來源</span>
@@ -320,6 +383,14 @@ const PLUGINS = [
       {bl:"4.5", os:["win","mac"], pv:"1.3.2", home:"https://github.com/zack3ddd/real-snow/", url:"https://github.com/zack3ddd/real-snow/releases/download/v1.3.2/real_snow.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
       {bl:"3.6", os:["win","mac"], pv:"內建", url:null, path:"偏好設定 > 附加元件 > 搜尋「Real Snow」打勾（3.6 官方自帶）", note:"3.6 直接用 Blender 官方內建版即可，不需這份"}
     ]},
+  { id:"hanization", name:"繁化助手（簡中→繁體）", src:"external",
+    tags:["其他"], chapter:"通用",
+    desc:"把 Blender 內建的簡體中文介面一鍵換成繁體，可選台灣習慣用語、可一鍵還原。查克自製，新手設置的語言步驟會用到。",
+    versions:[
+      {bl:"5.2", os:["win","mac"], pv:"0.3.1", home:"https://github.com/zack3ddd/blender-hanization/", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.1/zack_hanization_v0.3.1.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"0.3.1", home:"https://github.com/zack3ddd/blender-hanization/", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.1/zack_hanization_v0.3.1.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"3.6", os:["win","mac"], pv:"—", url:null, path:"—", status:"no", note:"需 Blender 4.2 以上；翻譯資料以 5.2 的簡體翻譯為基準"}
+    ]},
   { id:"wireext", name:"wire_ext（輸入法助手）", src:"external",
     tags:["流程優化"], chapter:"全部章節",
     desc:"修正 Windows 中文輸入法在 Blender 文字欄位的輸入問題。第三方插件，作者 Arius。",
@@ -365,6 +436,7 @@ const PLUGINS = [
   { id:"refoverlays", name:"References Overlays", src:"builtin", builtin:true,
     home:"https://extensions.blender.org/add-ons/references-overlays/",
     search:"偏好設定 > 取得擴充功能 > 搜尋「References Overlays」安裝",
+    note:"安裝後請進入設定，取消勾選它的快捷鍵設定，否則會跟 Blender 內建的快捷鍵衝突。",
     tags:["流程優化"], chapter:"通用", desc:"在視窗疊放參考圖，方便對照建模。" },
   { id:"booltool", name:"Bool Tool", src:"builtin", builtin:true,
     home:"https://extensions.blender.org/add-ons/bool-tool/",
@@ -505,6 +577,59 @@ const LOGS = [
    body:"新增雙語介面：跟著 Blender 語言切換，切英文顯英文、切繁中顯繁中（選簡體也顯繁中）。"}
 ];
 
+/* ── 5. 新手設置步驟（整理自課程 1-1） ──
+   links: {label, url} 外部連結 / {label, plug:插件id} 跳到插件卡 / {label, tab:分頁id} 切分頁 */
+const SETUP = [
+  { g:"① 安裝 Blender", steps:[
+    { id:"dl", t:"下載並安裝 Blender 4.5 LTS",
+      d:"到官網下載對應系統的 4.5 LTS 安裝檔，照指示安裝即可。課程錄製版本為 4.5.3，抓 4.5 系列最新版就好。同一台電腦可以同時安裝多個版本，彼此不影響。",
+      links:[{label:"Blender LTS 下載頁", url:"https://www.blender.org/download/lts/"}] }
+  ]},
+  { g:"② 語言設定", steps:[
+    { id:"lang", t:"介面語言選「簡體中文」",
+      d:"首次開啟點 Language 選「简体中文」。官方繁體翻譯目前只有約一半，所以課程建議先用翻譯完整的簡體，下一步再一鍵繁化。" },
+    { id:"han", t:"安裝「繁化助手」把介面變繁體",
+      d:"這裡跟課程影片不同：影片示範手動複製語系檔，現在直接安裝查克做的「繁化助手」插件就好——一鍵繁化、可選台灣習慣用語、隨時一鍵還原（4.5／5.2 都能用）。想中英文快速切換的，可以再裝 Toggle Language（按 F5 切換）。",
+      links:[{label:"下載繁化助手", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.1/zack_hanization_v0.3.1.zip"},
+             {label:"繁化助手說明頁", url:"https://github.com/zack3ddd/blender-hanization/"},
+             {label:"Toggle Language", plug:"togglelang"}] }
+  ]},
+  { g:"③ 介面調整", steps:[
+    { id:"scale", t:"解析度縮放調成 1.32",
+      d:"偏好設置 > 介面 > 解析度縮放。覺得字太小就調大，課程用 1.32。" }
+  ]},
+  { g:"④ 五個建議設定", steps:[
+    { id:"picker", t:"拾色器改成「方形 SV＋H」",
+      d:"偏好設置 > 介面 > 拾色器類型。改成方形 SV＋H，選色方式比較接近 Photoshop。" },
+    { id:"newdata", t:"取消「新建數據」翻譯",
+      d:"偏好設置 > 介面 > 語言，把「新建數據」取消勾選：新增的物體會用英文命名，避免因為翻譯造成部分插件不支援。" },
+    { id:"orbit", t:"開啟「圍繞選擇物體旋轉」",
+      d:"偏好設置 > 視圖導航，勾選「圍繞選擇物體旋轉」：旋轉視角時以選中的物體為中心，對新手更直覺。" },
+    { id:"cycles", t:"設定 Cycles 渲染設備",
+      d:"偏好設置 > 系統 > Cycles 渲染設備，依你的顯卡選擇後端，選好後把顯卡打勾（查克自己用 CUDA，比較穩定）。",
+      table:[["CUDA","NVIDIA GPU → 較穩定"],["OptiX","NVIDIA GPU → 支援較新的功能"],["HIP","AMD GPU"],["oneAPI","Intel GPU"],["Metal","Mac 設備"]] },
+    { id:"undo", t:"復原次數拉到 256",
+      d:"偏好設置 > 系統 > 記憶體限額 > 復原次數。預設 32 次太少，直接拉到最大 256。" }
+  ]},
+  { g:"⑤ 儲存與安裝插件", steps:[
+    { id:"save1", t:"儲存偏好設置",
+      d:"左下角選單按「儲存偏好設置」。雖然預設會自動儲存，手動存一次最保險。" },
+    { id:"online", t:"開啟「獲取擴展」聯機訪問",
+      d:"偏好設置 > 獲取擴展，首次開啟勾選「允許聯機訪問」，才看得到官方插件庫。" },
+    { id:"plugs", t:"對照清單安裝課程插件",
+      d:"照本站「插件查詢」的清單逐一安裝：標「內建／搜尋」的直接在 Blender 裡搜尋；標「外部下載」的先下載 zip，再用「獲取擴展」右上角箭頭 >「從磁盤安裝」。",
+      links:[{label:"打開插件查詢", tab:"plugins"}] },
+    { id:"qsm", t:"快捷鍵地圖：從磁盤安裝",
+      d:"查克自製的快捷鍵地圖（按 F6 叫出），下載 zip 後從磁盤安裝，會自動依你的作業系統顯示對應版本。",
+      links:[{label:"查看快捷鍵地圖", plug:"quickshortcutmap"}] },
+    { id:"refov", t:"References Overlays：關掉它的快捷鍵",
+      d:"這個插件的快捷鍵會跟 Blender 內建的 Alt+Z 衝突。安裝後進入它的設定，把快捷鍵取消勾選（功能照常用）。",
+      links:[{label:"查看 References Overlays", plug:"refoverlays"}] },
+    { id:"save2", t:"再儲存一次偏好設置",
+      d:"插件全部裝完後，再按一次「儲存偏好設置」，設置完成！" }
+  ]}
+];
+
 /* ══════════════════════════════════════════════════════
    以下為邏輯，通常不需更動
    ══════════════════════════════════════════════════════ */
@@ -530,12 +655,12 @@ function renderPlugins(){
          && !(p.tags||[]).join("").includes(q)) return;
     // builtin:true 的項目自動產生三版列（用 search 當安裝說明）
     const allV = p.versions || VERS.map(bl =>
-      ({bl, os:["win","mac"], pv:"搜尋啟用", url:null, home:p.home, path:p.search}));
+      ({bl, os:["win","mac"], pv:"搜尋啟用", url:null, home:p.home, path:p.search, note:p.note}));
     const vs = allV.filter(v =>
       (F.ver==="all"||v.bl===F.ver) && (F.os==="all"||v.os.includes(F.os)));
     if(!vs.length) return;
     n++;
-    html += `<div class="card">
+    html += `<div class="card" data-pid="${p.id}">
       <div class="chead"><div style="flex:1">
         <span class="cname">${esc(p.name)}</span>${SRCB[p.src]||""}
         <div class="cdesc">${esc(p.desc)}</div>
@@ -658,6 +783,83 @@ function renderLogs(){
 
 function renderAll(){ renderPlugins(); renderFaq(); renderHw(); }
 
+/* ── 新手設置 ── */
+const SKEY = "zackSetupDone";
+let SDONE = {};
+try{ SDONE = JSON.parse(localStorage.getItem(SKEY) || "{}"); }catch(e){ SDONE = {}; }
+const saveSetup = () => { try{ localStorage.setItem(SKEY, JSON.stringify(SDONE)); }catch(e){} };
+const ALLSTEPS = SETUP.flatMap(g => g.steps);
+
+function showTab(id){
+  document.querySelectorAll("nav.tabs button").forEach(x =>
+    x.classList.toggle("on", x.dataset.tab === id));
+  ["setup","plugins","faq","hw","changelog"].forEach(s =>
+    document.getElementById(s).classList.toggle("hide", s !== id));
+}
+
+function jumpPlug(pid){
+  F.src = "all";
+  document.getElementById("psearch").value = "";
+  document.querySelectorAll('.chip[data-f="src"]').forEach(x =>
+    x.classList.toggle("on", x.dataset.v === "all"));
+  renderPlugins();
+  showTab("plugins");
+  const el = document.querySelector(`.card[data-pid="${pid}"]`);
+  if(el){
+    el.scrollIntoView({behavior:"smooth", block:"center"});
+    el.classList.remove("flash"); void el.offsetWidth; el.classList.add("flash");
+  }
+}
+
+function setupProgress(){
+  const total = ALLSTEPS.length;
+  const done = ALLSTEPS.filter(s => SDONE[s.id]).length;
+  document.getElementById("spn").textContent = done;
+  document.getElementById("spt").textContent = total;
+  document.getElementById("spfill").style.width = (total ? 100*done/total : 0) + "%";
+}
+
+function renderSetup(){
+  document.getElementById("setuplist").innerHTML = SETUP.map(g => `
+    <h2 class="sec">${esc(g.g)}</h2>
+    ${g.steps.map(s => `
+    <div class="step${SDONE[s.id] ? " done" : ""}" data-sid="${s.id}">
+      <input type="checkbox" ${SDONE[s.id] ? "checked" : ""}>
+      <div style="flex:1">
+        <div class="st">${esc(s.t)}</div>
+        <div class="sd">${esc(s.d)}</div>
+        ${s.table ? `<table class="ctab">${s.table.map(r =>
+          `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td></tr>`).join("")}</table>` : ""}
+        ${s.links ? `<div class="slinks">${s.links.map(l =>
+          l.url ? `<a class="slink" href="${l.url}" target="_blank" rel="noopener">${esc(l.label)}</a>`
+          : l.plug ? `<button class="slink" data-jump="${l.plug}">${esc(l.label)}</button>`
+          : `<button class="slink" data-gotab="${l.tab}">${esc(l.label)}</button>`).join("")}</div>` : ""}
+      </div>
+    </div>`).join("")}`).join("");
+  setupProgress();
+
+  document.querySelectorAll(".step").forEach(el => {
+    const id = el.dataset.sid;
+    const cb = el.querySelector("input");
+    const toggle = () => {
+      SDONE[id] = !SDONE[id];
+      if(!SDONE[id]) delete SDONE[id];
+      saveSetup();
+      cb.checked = !!SDONE[id];
+      el.classList.toggle("done", !!SDONE[id]);
+      setupProgress();
+    };
+    cb.onchange = toggle;
+    el.querySelector(".st").onclick = toggle;
+  });
+  document.querySelectorAll("[data-jump]").forEach(b => b.onclick = () => jumpPlug(b.dataset.jump));
+  document.querySelectorAll("[data-gotab]").forEach(b => b.onclick = () => showTab(b.dataset.gotab));
+}
+
+document.getElementById("spreset").onclick = () => {
+  SDONE = {}; saveSetup(); renderSetup();
+};
+
 /* ── 事件綁定 ── */
 document.querySelectorAll(".chip").forEach(b=>{
   b.onclick = ()=>{
@@ -674,15 +876,10 @@ document.querySelectorAll(".chip").forEach(b=>{
 document.getElementById("psearch").oninput = renderPlugins;
 document.getElementById("fsearch").oninput = renderFaq;
 document.querySelectorAll("nav.tabs button").forEach(b=>{
-  b.onclick = ()=>{
-    document.querySelectorAll("nav.tabs button").forEach(x=>x.classList.remove("on"));
-    b.classList.add("on");
-    ["plugins","faq","hw","changelog"].forEach(id=>
-      document.getElementById(id).classList.toggle("hide", id!==b.dataset.tab));
-  };
+  b.onclick = ()=> showTab(b.dataset.tab);
 });
 
-renderAll(); renderLogs();
+renderAll(); renderLogs(); renderSetup();
 </script>
 </body>
 </html>
