@@ -215,6 +215,16 @@ select:focus{outline:0;border-color:var(--accent)}
 
 .hide{display:none}
 .empty{text-align:center;color:var(--dim);padding:46px 0}
+
+/* 頁尾 */
+footer{border-top:1px solid var(--line);margin-top:48px;padding:22px 0 6px;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;
+  color:var(--dim);font-size:.84rem}
+footer .fbrand{font-weight:700;color:var(--text)}
+footer .fbrand b{color:var(--gold)}
+footer a{color:var(--dim);text-decoration:none}
+footer a:hover{color:var(--accent)}
+footer .flinks{display:flex;gap:16px;flex-wrap:wrap}
 @media(max-width:640px){
   .flabel{width:auto}
   .envbar{gap:10px}
@@ -240,7 +250,7 @@ select:focus{outline:0;border-color:var(--accent)}
 <a class="cta" href="https://course.zack3d.art/digital-downloads" target="_blank" rel="noopener">
   <div class="ctxt">
     <div class="ctitle">📥 到查克的數位下載區免費註冊</div>
-    <div class="csub">插件、新工具、更新通知都會發布在那裡——有新東西第一時間收到</div>
+    <div class="csub">有什麼新工具、插件更新跟資源都會匯集在我的網站，歡迎前往註冊！</div>
   </div>
   <span class="btn">前往註冊 →</span>
 </a>
@@ -343,6 +353,15 @@ select:focus{outline:0;border-color:var(--accent)}
   </div>
   <div id="logs"></div>
 </section>
+
+<footer>
+  <span class="fbrand">Zack<b>3D</b>　<span style="font-weight:400;color:var(--dim)">將創作帶入生活</span></span>
+  <div class="flinks">
+    <a href="mailto:zack@zack3d.art">✉️ zack@zack3d.art</a>
+    <a href="https://sat.cool/course/160" target="_blank" rel="noopener">線上課程</a>
+    <a href="https://course.zack3d.art/digital-downloads" target="_blank" rel="noopener">數位下載區</a>
+  </div>
+</footer>
 
 </div>
 
