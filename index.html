@@ -147,6 +147,22 @@ h2.sec:first-child{margin-top:0}
 .pinst input{width:16px;height:16px;accent-color:var(--ok);cursor:pointer}
 .pinst.on{color:var(--ok);font-weight:600}
 .card.pdone{opacity:.6}
+
+/* 插件全裝完提示 */
+.pcomplete{background:linear-gradient(135deg,rgba(108,186,130,.15),rgba(243,197,82,.12));
+  border:1px solid var(--ok);border-radius:10px;padding:13px 17px;margin-bottom:16px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-size:.92rem}
+.pcomplete .btn{padding:7px 16px;font-size:.85rem}
+.pmodal{position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.55);
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.pmbox{background:var(--panel);border:1px solid var(--ok);border-radius:14px;
+  padding:28px 30px;max-width:420px;text-align:center}
+.pmbox .pmt{font-size:1.25rem;font-weight:700;margin-bottom:8px}
+.pmbox .pmd{color:var(--dim);font-size:.9rem;margin-bottom:18px}
+.pmbox .pmbtns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pmlater{background:none;border:1px solid var(--line);color:var(--dim);border-radius:6px;
+  padding:9px 18px;cursor:pointer;font-size:.88rem;font-family:inherit}
+.pmlater:hover{border-color:var(--accent);color:var(--text)}
 .step{background:var(--panel);border:1px solid var(--line);border-radius:9px;
   padding:13px 16px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start}
 .step input[type=checkbox]{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);
@@ -312,6 +328,10 @@ footer .flinks{display:flex;gap:16px;flex-wrap:wrap}
     <div class="spbar"><div id="ppfill"></div></div>
     <button id="ppreset">重設進度</button>
   </div>
+  <div id="pcomplete" class="pcomplete hide">
+    <span style="flex:1">🎉 課程插件全部安裝完成！</span>
+    <button class="btn" data-back-setup>回到新手設置確認 →</button>
+  </div>
   <div class="count">符合條件：<b id="pn">0</b> 個插件</div>
   <div id="plist"></div>
 </section>
@@ -353,6 +373,17 @@ footer .flinks{display:flex;gap:16px;flex-wrap:wrap}
   </div>
   <div id="logs"></div>
 </section>
+
+<div id="pmodal" class="pmodal hide">
+  <div class="pmbox">
+    <div class="pmt">🎉 全部安裝完成！</div>
+    <div class="pmd">課程插件都裝好了。回到新手設置，把「對照清單安裝課程插件」這一步打勾吧。</div>
+    <div class="pmbtns">
+      <button class="btn" data-back-setup>回到新手設置確認 →</button>
+      <button class="pmlater" id="pmclose">稍後再說</button>
+    </div>
+  </div>
+</div>
 
 <footer>
   <span class="fbrand">Zack<b>3D</b>　<span style="font-weight:400;color:var(--dim)">將創作帶入生活</span></span>
@@ -683,6 +714,19 @@ function plugProgress(){
   document.getElementById("ppn").textContent = done;
   document.getElementById("ppt").textContent = total;
   document.getElementById("ppfill").style.width = (total ? 100*done/total : 0) + "%";
+  document.getElementById("pcomplete").classList.toggle("hide", !(total && done === total));
+  return done === total && total > 0;
+}
+
+function backToSetup(){
+  document.getElementById("pmodal").classList.add("hide");
+  SDONE["plugs"] = true; saveSetup(); renderSetup();
+  showTab("setup");
+  const st = document.querySelector('.step[data-sid="plugs"]');
+  if(st){
+    st.scrollIntoView({behavior:"smooth", block:"center"});
+    st.classList.remove("flash"); void st.offsetWidth; st.classList.add("flash");
+  }
 }
 
 /* ── 插件 ── */
@@ -732,13 +776,16 @@ function renderPlugins(){
   document.querySelectorAll("[data-pchk]").forEach(cb => {
     cb.onchange = () => {
       const id = cb.dataset.pchk;
+      const wasComplete = PLUGINS.every(p => PDONE[p.id]);
       PDONE[id] = !PDONE[id];
       if(!PDONE[id]) delete PDONE[id];
       savePlugs();
       const card = document.querySelector(`.card[data-pid="${id}"]`);
       if(card){ card.classList.toggle("pdone", !!PDONE[id]);
         card.querySelector(".pinst").classList.toggle("on", !!PDONE[id]); }
-      plugProgress();
+      const isComplete = plugProgress();
+      if(isComplete && !wasComplete)
+        document.getElementById("pmodal").classList.remove("hide");
     };
   });
   plugProgress();
@@ -915,6 +962,12 @@ document.getElementById("spreset").onclick = () => {
 };
 document.getElementById("ppreset").onclick = () => {
   PDONE = {}; savePlugs(); renderPlugins();
+};
+document.querySelectorAll("[data-back-setup]").forEach(b => b.onclick = backToSetup);
+document.getElementById("pmclose").onclick = () =>
+  document.getElementById("pmodal").classList.add("hide");
+document.getElementById("pmodal").onclick = e => {
+  if(e.target.id === "pmodal") e.target.classList.add("hide");
 };
 
 /* ── 事件綁定 ── */
