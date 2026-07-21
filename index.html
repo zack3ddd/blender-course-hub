@@ -54,6 +54,10 @@ nav.tabs{display:flex;gap:2px;margin-bottom:24px;border-bottom:1px solid var(--l
 nav.tabs button{background:none;border:0;color:var(--dim);padding:10px 15px;
   font-size:.92rem;cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap}
 nav.tabs button.on{color:var(--text);border-bottom-color:var(--accent)}
+nav.tabs button.primary{color:var(--text);font-weight:700;font-size:1.02rem}
+nav.tabs button.primary::before{content:"★";color:var(--gold);font-size:.72rem;
+  margin-right:5px;vertical-align:1px}
+nav.tabs button.primary.on{color:var(--accent);border-bottom-color:var(--accent)}
 
 .filters{background:var(--panel);border:1px solid var(--line);
   border-radius:10px;padding:16px 18px;margin-bottom:22px}
@@ -134,10 +138,15 @@ h2.sec:first-child{margin-top:0}
 .sptxt{font-size:.88rem;white-space:nowrap}
 .sptxt b{color:var(--accent);font-size:1.05rem}
 .spbar{flex:1;height:8px;background:var(--panel2);border-radius:6px;overflow:hidden;min-width:120px}
-#spfill{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width .3s}
-#spreset{background:none;border:1px solid var(--line);color:var(--dim);border-radius:6px;
+.spbar>div{height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--accent));transition:width .3s}
+#spreset,#ppreset{background:none;border:1px solid var(--line);color:var(--dim);border-radius:6px;
   padding:4px 12px;cursor:pointer;font-size:.8rem;font-family:inherit}
-#spreset:hover{border-color:var(--no);color:var(--no)}
+#spreset:hover,#ppreset:hover{border-color:var(--no);color:var(--no)}
+.pinst{display:flex;align-items:center;gap:6px;color:var(--dim);font-size:.82rem;
+  cursor:pointer;flex-shrink:0;white-space:nowrap;user-select:none}
+.pinst input{width:16px;height:16px;accent-color:var(--ok);cursor:pointer}
+.pinst.on{color:var(--ok);font-weight:600}
+.card.pdone{opacity:.6}
 .step{background:var(--panel);border:1px solid var(--line);border-radius:9px;
   padding:13px 16px;margin-bottom:9px;display:flex;gap:12px;align-items:flex-start}
 .step input[type=checkbox]{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);
@@ -255,8 +264,8 @@ select:focus{outline:0;border-color:var(--accent)}
 </div>
 
 <nav class="tabs">
-  <button class="on" data-tab="setup">新手設置</button>
-  <button data-tab="plugins">插件查詢</button>
+  <button class="on primary" data-tab="setup">新手設置</button>
+  <button class="primary" data-tab="plugins">插件查詢</button>
   <button data-tab="faq">問題排查</button>
   <button data-tab="hw">硬體建議</button>
   <button data-tab="changelog">更新日誌</button>
@@ -287,6 +296,11 @@ select:focus{outline:0;border-color:var(--accent)}
       <span class="flabel">搜尋</span>
       <input type="text" id="psearch" placeholder="輸入插件名稱關鍵字…">
     </div>
+  </div>
+  <div class="sprog">
+    <span class="sptxt">已安裝 <b id="ppn">0</b> / <span id="ppt">0</span></span>
+    <div class="spbar"><div id="ppfill"></div></div>
+    <button id="ppreset">重設進度</button>
   </div>
   <div class="count">符合條件：<b id="pn">0</b> 個插件</div>
   <div id="plist"></div>
@@ -617,14 +631,8 @@ const SETUP = [
     { id:"online", t:"開啟「獲取擴展」聯機訪問",
       d:"偏好設置 > 獲取擴展，首次開啟勾選「允許聯機訪問」，才看得到官方插件庫。" },
     { id:"plugs", t:"對照清單安裝課程插件",
-      d:"照本站「插件查詢」的清單逐一安裝：標「內建／搜尋」的直接在 Blender 裡搜尋；標「外部下載」的先下載 zip，再用「獲取擴展」右上角箭頭 >「從磁盤安裝」。",
+      d:"照本站「插件查詢」的清單逐一安裝：標「內建／搜尋」的，直接在 Blender 偏好設置的「附加元件」搜尋、勾選開啟；找不到的，再到「獲取擴展」搜尋安裝後勾選開啟。標「外部下載」的，先下載 zip，再用「獲取擴展」右上角箭頭 >「從磁盤安裝」。每張插件卡上有安裝提醒（例如 References Overlays 要關掉它的快捷鍵），裝好一個就在卡片右上角打勾「已安裝」，進度會記住。",
       links:[{label:"打開插件查詢", tab:"plugins"}] },
-    { id:"qsm", t:"快捷鍵地圖：從磁盤安裝",
-      d:"查克自製的快捷鍵地圖（按 F6 叫出），下載 zip 後從磁盤安裝，會自動依你的作業系統顯示對應版本。",
-      links:[{label:"查看快捷鍵地圖", plug:"quickshortcutmap"}] },
-    { id:"refov", t:"References Overlays：關掉它的快捷鍵",
-      d:"這個插件的快捷鍵會跟 Blender 內建的 Alt+Z 衝突。安裝後進入它的設定，把快捷鍵取消勾選（功能照常用）。",
-      links:[{label:"查看 References Overlays", plug:"refoverlays"}] },
     { id:"save2", t:"再儲存一次偏好設置",
       d:"插件全部裝完後，再按一次「儲存偏好設置」，設置完成！" }
   ]}
@@ -645,6 +653,19 @@ const VERS = ["3.6","4.5","5.2"];
 const esc = s => String(s).replace(/[&<>]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
 const curOS   = () => F.os  === "all" ? ["win","mac"] : [F.os];
 
+/* ── 插件安裝進度 ── */
+const PKEY = "zackPlugsDone";
+let PDONE = {};
+try{ PDONE = JSON.parse(localStorage.getItem(PKEY) || "{}"); }catch(e){ PDONE = {}; }
+const savePlugs = () => { try{ localStorage.setItem(PKEY, JSON.stringify(PDONE)); }catch(e){} };
+function plugProgress(){
+  const total = PLUGINS.length;
+  const done = PLUGINS.filter(p => PDONE[p.id]).length;
+  document.getElementById("ppn").textContent = done;
+  document.getElementById("ppt").textContent = total;
+  document.getElementById("ppfill").style.width = (total ? 100*done/total : 0) + "%";
+}
+
 /* ── 插件 ── */
 function renderPlugins(){
   const q = document.getElementById("psearch").value.trim().toLowerCase();
@@ -660,13 +681,14 @@ function renderPlugins(){
       (F.ver==="all"||v.bl===F.ver) && (F.os==="all"||v.os.includes(F.os)));
     if(!vs.length) return;
     n++;
-    html += `<div class="card" data-pid="${p.id}">
+    html += `<div class="card${PDONE[p.id]?" pdone":""}" data-pid="${p.id}">
       <div class="chead"><div style="flex:1">
         <span class="cname">${esc(p.name)}</span>${SRCB[p.src]||""}
         <div class="cdesc">${esc(p.desc)}</div>
         <div class="ctags"><span class="chip-chapter">📖 ${esc(p.chapter)}</span>${
           (p.tags||[]).map(t=>`<span class="ftag2">${esc(t)}</span>`).join("")}</div>
-      </div></div>
+      </div>
+      <label class="pinst${PDONE[p.id]?" on":""}"><input type="checkbox" data-pchk="${p.id}"${PDONE[p.id]?" checked":""}>已安裝</label></div>
       <div class="vbox">${vs.map(v=>{
         const [scls,slabel] = SMAP[v.status||"ok"];
         const dl = (v.url && v.status!=="no")
@@ -688,6 +710,19 @@ function renderPlugins(){
   document.getElementById("pn").textContent = n;
   document.getElementById("plist").innerHTML = n ? html
     : `<div class="empty">目前的篩選條件沒有對應的插件<br>試著放寬 Blender 版本或系統條件</div>`;
+  document.querySelectorAll("[data-pchk]").forEach(cb => {
+    cb.onchange = () => {
+      const id = cb.dataset.pchk;
+      PDONE[id] = !PDONE[id];
+      if(!PDONE[id]) delete PDONE[id];
+      savePlugs();
+      const card = document.querySelector(`.card[data-pid="${id}"]`);
+      if(card){ card.classList.toggle("pdone", !!PDONE[id]);
+        card.querySelector(".pinst").classList.toggle("on", !!PDONE[id]); }
+      plugProgress();
+    };
+  });
+  plugProgress();
 }
 
 /* ── FAQ ── */
@@ -858,6 +893,9 @@ function renderSetup(){
 
 document.getElementById("spreset").onclick = () => {
   SDONE = {}; saveSetup(); renderSetup();
+};
+document.getElementById("ppreset").onclick = () => {
+  PDONE = {}; savePlugs(); renderPlugins();
 };
 
 /* ── 事件綁定 ── */
