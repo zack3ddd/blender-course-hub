@@ -447,9 +447,9 @@ const PLUGINS = [
     tags:["其他"], chapter:"通用",
     desc:"把 Blender 內建的簡體中文介面一鍵換成繁體，可選台灣習慣用語、可一鍵還原。查克自製，新手設置的語言步驟會用到。",
     versions:[
-      {bl:"5.2", os:["win","mac"], pv:"0.3.1", home:"https://github.com/zack3ddd/blender-hanization/", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.1/zack_hanization_v0.3.1.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
-      {bl:"4.5", os:["win","mac"], pv:"0.3.1", home:"https://github.com/zack3ddd/blender-hanization/", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.1/zack_hanization_v0.3.1.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
-      {bl:"3.6", os:["win","mac"], pv:"—", url:null, path:"—", status:"no", note:"需 Blender 4.2 以上；翻譯資料以 5.2 的簡體翻譯為基準"}
+      {bl:"5.2", os:["win","mac"], pv:"0.3.2", home:"https://github.com/zack3ddd/blender-hanization/", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.2/zack_hanization_v0.3.2.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"4.5", os:["win","mac"], pv:"0.3.2", home:"https://github.com/zack3ddd/blender-hanization/", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.2/zack_hanization_v0.3.2.zip", path:"偏好設定 > 附加元件 > 從磁碟安裝"},
+      {bl:"3.6", os:["win","mac"], pv:"—", url:null, path:"—", status:"no", note:"需 Blender 4.2 以上；翻譯資料以 5.3 的簡體翻譯為基準"}
     ]},
   { id:"wireext", name:"wire_ext（輸入法助手）", src:"external",
     tags:["流程優化"], chapter:"全部章節",
@@ -623,6 +623,8 @@ const GPUS = [
 
 /* ── 4. 更新日誌 ── */
 const LOGS = [
+  {date:"2026-11-13", type:"plugin", title:"繁化助手 0.3.2",
+   body:"支援 Blender 5.3：5.3 新增的介面文字也會變繁體。4.5／5.2 照常可用，功能不變。"},
   {date:"2026-07-20", type:"course", title:"課程資源中心正式上線",
    body:"這個頁面上線了！集中課程會用到的插件安裝、各版本相容性、常見問題排查與硬體建議。選好你的 Blender 版本與系統，內容會自動跟著篩選。之後插件有更新也會同步更新在這裡。"},
   {date:"2026-07-20", type:"plugin", title:"Real Snow 1.3.2 部署上線",
@@ -649,8 +651,8 @@ const SETUP = [
     { id:"lang", t:"介面語言選「簡體中文」",
       d:"首次開啟點 Language 選「简体中文」。官方繁體翻譯目前只有約一半，所以課程建議先用翻譯完整的簡體，下一步再一鍵繁化。" },
     { id:"han", t:"安裝「繁化助手」把介面變繁體",
-      d:"這裡跟課程影片不同：影片示範手動複製語系檔，現在直接安裝查克做的「繁化助手」插件就好——一鍵繁化、可選台灣習慣用語、隨時一鍵還原（4.5／5.2 都能用）。想中英文快速切換的，可以再裝 Toggle Language（按 F5 切換）。",
-      links:[{label:"下載繁化助手", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.1/zack_hanization_v0.3.1.zip"},
+      d:"這裡跟課程影片不同：影片示範手動複製語系檔，現在直接安裝查克做的「繁化助手」插件就好——一鍵繁化、可選台灣習慣用語、隨時一鍵還原（4.5／5.2／5.3 都能用）。想中英文快速切換的，可以再裝 Toggle Language（按 F5 切換）。",
+      links:[{label:"下載繁化助手", url:"https://github.com/zack3ddd/blender-hanization/releases/download/v0.3.2/zack_hanization_v0.3.2.zip"},
              {label:"繁化助手說明頁", url:"https://github.com/zack3ddd/blender-hanization/"},
              {label:"Toggle Language", plug:"togglelang"}] }
   ]},
